@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#00a651">
+  <title>Viva Live Studio | Panel del presentador</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#inicio">
+      <span class="brandmark">viva</span>
+      <span class="brandline">LIVE <b>STUDIO</b></span>
+    </a>
+    <nav id="nav" class="nav" aria-label="Navegación principal">
+      <a href="#inicio">Estudio</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#pedidos">Pedidos</a>
+      <a href="#bitacora">Bitácora</a>
+    </nav>
+    <div class="topright">
+      <span class="demo">DEMO ACADÉMICA</span>
+      <button id="themeBtn" class="iconbtn" aria-label="Cambiar tema">☀</button>
+      <button id="menuBtn" class="iconbtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    </div>
+  </header>
+  <div id="navOverlay" class="navOverlay" aria-hidden="true"></div>
+
+  <main id="inicio" class="layout">
+    <!-- SIDEBAR IZQUIERDO: chat + bitácora -->
+    <aside class="sidebar">
+      <section class="panel chatpanel">
+        <div class="sectionhead">
+          <div>
+            <span class="eyebrow">DÍA 1 · KEYUP</span>
+            <h2>Chat del Live</h2>
+          </div>
+          <span class="chatbadge">● LOCAL</span>
+        </div>
+        <label class="chatIdentity">Tu usuario
+          <input id="chatUser" maxlength="24" minlength="3" placeholder="@presentadora" value="@presentadora" required>
+        </label>
+        <div id="chat" class="chat" aria-live="polite">
+          <div class="message system">Bienvenido al chat de prueba. Escribe para mostrar mensajes en pantalla.</div>
+        </div>
+        <form id="chatForm" class="chatForm">
+          <input id="chatInput" minlength="2" maxlength="180" placeholder="Escribe un comentario…" autocomplete="off" required>
+          <button class="btn primary" type="submit" aria-label="Enviar mensaje">➤</button>
+        </form>
+        <small id="typing" class="muted">Escribe para probar el evento keyup.</small>
+        <button id="fakeChat" class="btn small wide" type="button">+ Generar comentario ficticio</button>
+      </section>
+
+      <section id="bitacora" class="panel">
+        <div class="sectionhead">
+          <div>
+            <span class="eyebrow">DOM · AUDITORÍA</span>
+            <h2>Bitácora de eventos</h2>
+          </div>
+          <button id="clearLogs" class="btn small">Limpiar</button>
+        </div>
+        <div class="filter">
+          <select id="logFilter" aria-label="Filtrar eventos">
+            <option value="">Todos los eventos</option>
+            <option value="click">Click</option>
+            <option value="dblclick">Doble clic</option>
+            <option value="keyup">Keyup</option>
+            <option value="change">Change</option>
+            <option value="submit">Submit</option>
+            <option value="sistema">Sistema</option>
+          </select>
+          <button id="exportLogs" class="btn small">Exportar</button>
+        </div>
+        <div id="logs" class="logs" aria-live="polite"></div>
+        <p class="muted">La bitácora muestra las acciones que ocurren en este navegador, no espectadores reales.</p>
+      </section>
+
+      <div class="panel note">
+        <b>Sobre esta demostración</b>
+        <p>No se conecta con TikTok ni hay usuarios remotos o pagos reales. Los pedidos se guardan en este navegador y el chat es local. Para emitir a público real se requiere integrar un servicio de streaming.</p>
+      </div>
+    </aside>
+
+    <!-- COLUMNA PRINCIPAL: estudio + ofertas + pedidos -->
+    <section class="primary">
+      <div class="heading">
+        <div>
+          <span class="eyebrow">PANEL DEL CREADOR</span>
+          <h1>Tu estudio de transmisión</h1>
+          <p>Presenta ofertas, habla a cámara y controla tu Live.</p>
+        </div>
+        <span id="status" class="status">● SIN INICIAR</span>
+      </div>
+
+      <!-- Estadísticas ARRIBA del stage -->
+      <div class="stats">
+        <div><span>Reacciones</span><strong id="likes">0</strong></div>
+        <div><span>Comentarios</span><strong id="commentCount">0</strong></div>
+        <div><span>Pedidos de prueba</span><strong id="orderCount">0</strong></div>
+        <div><span>Tiempo en sesión</span><strong id="sessionTime">00:00</strong></div>
+      </div>
+
+      <div class="stage" id="liveContainer">
+        <video id="video" autoplay playsinline muted></video>
+        <div id="empty" class="empty">
+          <div class="cameraicon">◉</div>
+          <h2>Tu cámara aparecerá aquí</h2>
+          <p>Activa la cámara para comenzar tu presentación.</p>
+          <button id="cameraBtn" class="btn light">📷 Activar cámara y micrófono</button>
+        </div>
+        <div class="stagehead">
+          <span id="liveBadge" class="livebadge">● PREVIA</span>
+          <span id="timer">00:00:00</span>
+          <span class="views">◉ <span id="viewers">0</span> espectadores simulados</span>
+        </div>
+        <div class="stagebottom">
+          <span class="tag">VIVA LIVE · PRESENTADOR</span>
+          <span id="offerOverlay" class="offerOverlay">Internet Hogar · Bs 199/mes (ejemplo)</span>
+        </div>
+        <div id="hearts" class="hearts"></div>
+      </div>
+
+      <!-- Toolbar en grupos temáticos -->
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">Sesión</span>
+          <button id="startBtn" class="btn primary">● Iniciar sesión</button>
+          <button id="stopBtn" class="btn" disabled>■ Finalizar</button>
+        </div>
+        <div class="toolbar-group">
+          <span class="toolbar-label">Media</span>
+          <button id="micBtn" class="btn">🎙 Micrófono activo</button>
+          <button id="camBtn" class="btn">📷 Cámara activa</button>
+          <button id="flipBtn" class="btn">↻ Cambiar cámara</button>
+          <button id="shareBtn" class="btn">▣ Compartir pantalla</button>
+          <button id="recordBtn" class="btn">⏺ Grabar</button>
+        </div>
+        <div class="toolbar-group">
+          <span class="toolbar-label">Acciones</span>
+          <button id="likeBtn" class="btn">♥ Reacción</button>
+        </div>
+      </div>
+      <p class="hint">La cámara y el micrófono funcionan en HTTPS o localhost. «Iniciar sesión» inicia una sesión local, no una emisión pública. Las cifras de audiencia son simuladas.</p>
+
+      <section id="ofertas" class="panel">
+        <div class="sectionhead">
+          <div>
+            <span class="eyebrow">CATÁLOGO DE DEMOSTRACIÓN</span>
+            <h2>Ofertas para mostrar en vivo</h2>
+          </div>
+          <button id="addProduct" class="btn small">+ Nueva oferta</button>
+        </div>
+        <div id="products" class="products"></div>
+      </section>
+
+      <section id="pedidos" class="panel">
+        <div class="sectionhead">
+          <div>
+            <span class="eyebrow">DÍA 2 · CHANGE Y SUBMIT</span>
+            <h2>Registrar pedido de prueba</h2>
+          </div>
+        </div>
+        <form id="orderForm" class="form">
+          <label>Oferta
+            <select id="variantSelect" required></select>
+          </label>
+          <label>Nombre del cliente
+            <input id="client" required minlength="3" maxlength="70" placeholder="Nombre completo">
+          </label>
+          <label>Contacto (8 dígitos, Bolivia)
+            <input id="contact" inputmode="numeric" pattern="[0-9]{8}" minlength="8" maxlength="8" required placeholder="Ej. 71234567">
+          </label>
+          <label>Cantidad
+            <input id="quantity" type="number" min="1" max="10" value="1" required>
+          </label>
+          <button class="btn primary" type="submit">Confirmar pedido de demostración</button>
+        </form>
+        <p id="orderError" class="formError" role="alert" aria-live="polite"></p>
+        <div id="orderList" class="orders">
+          <p class="muted">Aún no hay pedidos.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="floatingGuide" id="floatingGuide">DOBLE CLIC en el video = ❤️ · Selecciona ofertas y observa la bitácora</div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js" defer></script>
+</body>
+</html>
